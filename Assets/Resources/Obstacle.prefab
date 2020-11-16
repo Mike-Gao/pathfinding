@@ -299,6 +299,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d84958718f9b2e8459c42386d96dd1b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  square1: {fileID: 5189473921345846583}
+  square2: {fileID: 2995384212801849214}
   nodes:
   - {fileID: 5465601343441708506}
   - {fileID: 8490749020810365506}
@@ -306,8 +308,7 @@ MonoBehaviour:
   - {fileID: 4374409257445073045}
   - {fileID: 6975494208140949143}
   - {fileID: 3930086030603035028}
-  square1: {fileID: 5189473921345846583}
-  square2: {fileID: 2995384212801849214}
+  inflectionPt: 000000010000
 --- !u!1001 &610031875098873587
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -8,6 +8,8 @@ public class Vertex
     public Vertex prev;
     public Vertex next;
 
+    public bool isInflection = false;
+
     public List<Vertex> neighbors = new List<Vertex>();
 
     public Vector3 getValue(float z)
@@ -23,5 +25,10 @@ public class Vertex
     public override string ToString()
     {
         return value.ToString();
+    }
+
+    public bool CheckInflection()
+    {
+        return isInflection;
     }
 }

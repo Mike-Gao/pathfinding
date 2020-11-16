@@ -1,19 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Assertions;
 
 public class LevelManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    public Transform[] edges;
-    public readonly List<Vector2> pts = new List<Vector2>();
+    public List<Transform> stage_vertices;
+    public List<bool> stage_inflectionPts;
+
+    public ReducedVisibility Graph {get; private set;}
+
+    public GameObject Point;
+    public GameObject Line;
+    
+    UnityEvent graph_event = new UnityEvent();
+
+    public readonly List<CircularArray> shapes = new List<CircularArray>();
     public readonly List<Obstacle> obstacles = new List<Obstacle>();
 
     public Obstacle Obstacle;
 
     void Start()
     {
+        StagePrep();
         ObstacleSpawner();
+        ShowReducedVisabilityGraph();
     }
 
     // Update is called once per frame
@@ -30,6 +43,13 @@ public class LevelManager : MonoBehaviour
         }
         return false;
     }
+
+    void StagePrep()
+    {
+        Assert.IsTrue(stage_vertices.Count == stage_inflectionPts.Count);
+        shapes.Add(new CircularArray(stage_vertices, stage_inflectionPts));
+    }
+
     void ObstacleSpawner()
     {
         List<Vector2> positions = new List<Vector2>();
@@ -51,9 +71,28 @@ public class LevelManager : MonoBehaviour
         }
         foreach (var p in positions)
         {
-            Instantiate(Obstacle, p, Quaternion.identity);
+            var obstacle = Instantiate(Obstacle, p, Quaternion.identity);
+            obstacles.Add(obstacle);
+            shapes.Add(obstacle.vertices);
         }
 
+    }
+
+    void ShowReducedVisabilityGraph()
+    {
+        Graph = new ReducedVisibility(shapes);
+        foreach ( var vertex in Graph.vertices)
+        {
+            Instantiate(Point, vertex.getValue(Global.graphZ), Quaternion.identity);
+        }
+        foreach (var (v1, v2) in Graph.edges)
+        {
+            var ret = Instantiate(Line);
+            LineRenderer lr = ret.GetComponent<LineRenderer>();
+            var pos = new Vector3[] {v1.getValue(Global.graphZ), v2.getValue(Global.graphZ)};
+            lr.positionCount = pos.Length;
+            lr.SetPositions(pos);
+        }
     }
 
 }
