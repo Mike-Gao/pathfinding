@@ -8,6 +8,9 @@ public class LevelManager : MonoBehaviour
     public Transform[] edges;
     public readonly List<Vector2> pts = new List<Vector2>();
     public readonly List<Obstacle> obstacles = new List<Obstacle>();
+
+    public Obstacle Obstacle;
+
     void Start()
     {
         ObstacleSpawner();
@@ -19,9 +22,35 @@ public class LevelManager : MonoBehaviour
         
     }
 
+    bool Overlap(Vector2 new_p, List<Vector2> pos, float l)
+    {
+        foreach (var p in pos)
+        {
+            if (Mathf.Abs(p.x - new_p.x) < l && Mathf.Abs(p.x - new_p.y) < l) return true;
+        }
+        return false;
+    }
     void ObstacleSpawner()
     {
-        
+        List<Vector2> positions = new List<Vector2>();
+        float x_min = -4.51F;
+        float x_max = 4.47F;
+        float y_max = 2.5F;
+        float y_min = -2.53F;
+        int numOfObstacles = Random.Range(3, 5);
+        while (positions.Count < numOfObstacles)
+        {
+            Vector2 new_pos = new Vector2(Random.Range(x_min, x_max), Random.Range(y_min, y_max));
+            if(!Overlap(new_pos, positions, 1.6f))
+            {
+                positions.Add(new_pos);
+            }
+        }
+        foreach (var p in positions)
+        {
+            Instantiate(Obstacle, p, Quaternion.identity);
+        }
+
     }
 
 }
