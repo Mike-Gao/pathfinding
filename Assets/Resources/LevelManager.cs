@@ -10,7 +10,7 @@ public class LevelManager : MonoBehaviour
     public readonly List<Obstacle> obstacles = new List<Obstacle>();
     void Start()
     {
-        
+        ObstacleSpawner();
     }
 
     // Update is called once per frame

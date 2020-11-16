@@ -17,7 +17,7 @@ public class Obstacle : MonoBehaviour
         square1.transform.localPosition = new Vector3( -width / 2, -height / 2, Global.obstacleZ);
         square1.transform.localScale = new Vector3( width, height, 1);
         square2.transform.localPosition = new Vector3( -width / 2, -height / 2, Global.obstacleZ);
-        square2.transform.localScale = new Vector3( width, height, 1);
+        square2.transform.localScale = new Vector3( width, 1, 1);
 
         int[] rotation = new int[] { 0, 90, 180, 270 };
         var deg = rotation[random.Next(rotation.Length)];
