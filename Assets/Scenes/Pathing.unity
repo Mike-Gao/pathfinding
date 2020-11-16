@@ -3768,6 +3768,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edges: []
+  Obstacle: {fileID: 3617762245014770856, guid: 8bcfd451890d50446b87ba4d0dcd25aa,
+    type: 3}
 --- !u!1 &1934138662
 GameObject:
   m_ObjectHideFlags: 0
