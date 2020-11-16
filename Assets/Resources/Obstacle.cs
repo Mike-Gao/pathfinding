@@ -13,11 +13,14 @@ public class Obstacle : MonoBehaviour
     {
         var width = Random.Range(0.4f, 0.6f);
         var height = Random.Range(0.4f, 0.6f);
+        var a = Random.Range(0.4f, 0.6f);
+        var b = Random.Range(0.8f, 1.2f);
+        square1.transform.localScale = new Vector3( b, a, 1);
+        square1.transform.localPosition = new Vector3( -width + (b / 2), a / 2, Global.obstacleZ);
         
-        square1.transform.localPosition = new Vector3( -width / 2, -height / 2, Global.obstacleZ);
-        square1.transform.localScale = new Vector3( width, height, 1);
+        square2.transform.localScale = new Vector3( width, height, 1);
         square2.transform.localPosition = new Vector3( -width / 2, -height / 2, Global.obstacleZ);
-        square2.transform.localScale = new Vector3( width, 1, 1);
+        
 
         int[] rotation = new int[] { 0, 90, 180, 270 };
         var deg = rotation[random.Next(rotation.Length)];
