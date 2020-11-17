@@ -13,16 +13,16 @@ public class ReducedVisibility
         {
             foreach (var vertex in circ)
             {
-                if(vertex.isInflection == true)
+                if (vertex.isInflection == true)
                 {
                     vertices.Add(vertex);
                 }
             }
         }
 
-        for(int i = 0; i < vertices.Count; i++)
+        for (int i = 0; i < vertices.Count; i++)
         {
-            for(int j = i + 1; j < vertices.Count; j++)
+            for (int j = i + 1; j < vertices.Count; j++)
             {
                 var node_1 = vertices[i];
                 var node_2 = vertices[j];
@@ -30,8 +30,15 @@ public class ReducedVisibility
                 var pt_2 = new Vector3(node_2.value.x, node_2.value.y, Global.obstacleZ);
 
                 Vector3 dir = pt_2 - pt_1;
+                /*if (Physics.Raycast(pt_1, dir, dir.magnitude))
+                {
+                    Debug.Log("collision");
+                    Debug.DrawRay(pt_1, dir, Color.red, 100, false);
+
+                } */
                 if (!Physics.Raycast(pt_1, dir, dir.magnitude) && BitTangent(node_1, node_2))
                 {
+                    Debug.DrawRay(pt_1, dir, Color.white, 100, false);
                     edges.Add((node_1, node_2));
                 }
             }
@@ -61,7 +68,9 @@ public class ReducedVisibility
         if (val == 0)
         {
             return 0;
-        } else if (val > 0) {
+        }
+        else if (val > 0)
+        {
             return 1;
         }
         return -1;

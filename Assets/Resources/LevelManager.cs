@@ -71,7 +71,7 @@ public class LevelManager : MonoBehaviour
         }
         foreach (var p in positions)
         {
-            var obstacle = Instantiate(Obstacle, p, Quaternion.identity);
+            var obstacle = Instantiate(Obstacle, new Vector3(p.x, p.y, Global.obstacleZ), Quaternion.identity);
             obstacles.Add(obstacle);
             shapes.Add(obstacle.vertices);
         }
