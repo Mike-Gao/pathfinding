@@ -7,6 +7,7 @@ public class ReducedVisibility
 
     public readonly List<Vertex> vertices = new List<Vertex>();
     public readonly List<(Vertex, Vertex)> edges = new List<(Vertex, Vertex)>();
+    
     public ReducedVisibility(List<CircularArray> list)
     {
         foreach (CircularArray circ in list)
@@ -19,7 +20,7 @@ public class ReducedVisibility
                 }
             }
         }
-
+        
         for (int i = 0; i < vertices.Count; i++)
         {
             for (int j = i + 1; j < vertices.Count; j++)

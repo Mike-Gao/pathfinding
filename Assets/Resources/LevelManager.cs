@@ -78,6 +78,8 @@ public class LevelManager : MonoBehaviour
 
     }
 
+
+    
     void ShowReducedVisabilityGraph()
     {
         Graph = new ReducedVisibility(shapes);
@@ -85,6 +87,7 @@ public class LevelManager : MonoBehaviour
         {
             Instantiate(Point, vertex.getValue(Global.graphZ), Quaternion.identity);
         }
+
         foreach (var (v1, v2) in Graph.edges)
         {
             var ret = Instantiate(Line);
@@ -92,6 +95,10 @@ public class LevelManager : MonoBehaviour
             var pos = new Vector3[] {v1.getValue(Global.graphZ), v2.getValue(Global.graphZ)};
             lr.positionCount = pos.Length;
             lr.SetPositions(pos);
+            lr.startColor = Color.blue;
+            lr.endColor = Color.yellow;
+            lr.startWidth = 0.05f;
+            lr.endWidth = 0.05f;
         }
     }
 
