@@ -27,6 +27,20 @@ public class LevelManager : MonoBehaviour
         StagePrep();
         ObstacleSpawner();
         ShowReducedVisabilityGraph();
+
+        foreach( var list in shapes ){
+            for(int i = 0; i < list.Length; i++){
+                var ret = Instantiate(Line);
+                LineRenderer lr = ret.GetComponent<LineRenderer>();
+                var pos = new Vector3[] {list[i].getValue(Global.graphZ), list[i].prev.getValue(Global.graphZ)};
+                lr.positionCount = pos.Length;
+                lr.SetPositions(pos);
+                lr.startColor = Color.red;
+                lr.endColor = Color.green;
+                lr.startWidth = 0.05f;
+                lr.endWidth = 0.05f;
+            }
+        }
     }
 
     // Update is called once per frame
