@@ -24,7 +24,7 @@ public class LevelManager : MonoBehaviour
 
     public Agent agent;
     public List<Agent> agents = new List<Agent>();
-    public int agentLimit;
+    public int agentLimit = 500;
 
     void Start()
     {

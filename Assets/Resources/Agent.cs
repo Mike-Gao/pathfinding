@@ -23,7 +23,7 @@ public class Agent : MonoBehaviour
 
     private int failures = 0;
     private int collisions = 0;
-    bool Retry{
+    bool Retry {
         get{
             if (failures >=3) {
                 failures = 0;
@@ -148,4 +148,38 @@ public class Agent : MonoBehaviour
                 break;
         }       
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "DoNotCollideWithAgent" || status != 0)
+        {
+            return;
+        }
+
+        status = 2;
+
+        Debug.Log("OnTriggerStay");
+        // push back both collider aka wacky verlet constraint
+        var thisToThat = other.transform.position - transform.position;
+        var offset = radius * 2 - thisToThat.magnitude;
+        thisToThat.Normalize();
+        transform.position -= 0.6f * offset * thisToThat;
+        other.transform.position += 0.6f * offset * thisToThat;
+
+        Invoke(nameof(RetryDestination), Random.Range(0.1f, 0.5f));
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "DoNotCollideWithAgent") return;
+        collisions++;
+        Debug.Log("OnTriggerEnter");
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "DoNotCollideWithAgent") return;
+        collisions--;
+        Debug.Log("OnTriggerExit");
+    }
+
 }
