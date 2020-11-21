@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Global
+public static class Global
 {
 
     public static readonly float obstacleZ = -2;
@@ -40,4 +40,13 @@ public class Global
             return pos;
         }
     }
+
+    public static TValue GetValueOrReturnDefault<TKey, TValue> (this Dictionary<TKey, TValue> dict, TKey key, TValue defaultval = default)
+    {
+        if (dict.TryGetValue(key, out TValue value)) {
+            return value;
+        }
+        return defaultval;
+    }
+
 }

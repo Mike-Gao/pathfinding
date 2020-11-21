@@ -55,33 +55,52 @@ public class Graph
 
     }
 
-    public float Heuristic(GraphNode n)
+    public float GetHeuristic(GraphNode n)
     {
         return (n.v.value - dest.v.value).magnitude;
     }
 
-    public GraphNode ComputeLowestFScore(HashSet<GraphNode> set, Dictionary<GraphNode,float> fscore)
+    public GraphNode ComputeLowestFScore(HashSet<GraphNode> set, Dictionary<GraphNode,float> fScore)
     {
         GraphNode lowest = null;
         float current = float.PositiveInfinity;
 
         foreach(var n in set)
         {
-            
+            float score = fScore.GetValueOrReturnDefault(n, float.PositiveInfinity);
+            if (lowest == null || score < current)
+            {
+                lowest = n;
+                current = score;
+            }
         }
+        return lowest;
     }
+
+    public List<Vector3> ReconstructPath(Dictionary<GraphNode, GraphNode> cameFrom, GraphNode cur)
+    {
+        List<Vector3> tmp = new List<Vector3>();
+        tmp.Add(cur.v.getValue(Global.agentZ));
+        while (cameFrom.ContainsKey(cur))
+        {
+            cur = cameFrom[cur];
+            tmp.Add(cur.v.getValue(Global.agentZ));
+        }
+        return tmp;
+    }
+
     public List<Vector3> AStarSearch()
     {
         // idea borrowed directly from wikipedia
         var openSet = new HashSet<GraphNode>();
-        openset.Add(orig);
+        openSet.Add(orig);
         var cameFrom = new Dictionary<GraphNode, GraphNode>();
         var gScore = new Dictionary<GraphNode, float>();
         gScore.Add(orig, 0);
         var fScore = new Dictionary<GraphNode, float>();
-        fScore.Add(orig, Heuristic(orig))
+        fScore.Add(orig, GetHeuristic(orig));
 
-        while(openSet.Count != 0)
+        while (openSet.Count != 0)
         {
             var cur = ComputeLowestFScore(openSet, fScore);
 
@@ -89,7 +108,24 @@ public class Graph
             {
                 return ReconstructPath(cameFrom, cur);
             }
+
+            openSet.Remove(cur);
+            foreach (var (node, cost) in cur.neighbors)
+            {
+                var GScoreCandidate = gScore.GetValueOrReturnDefault(cur, float.PositiveInfinity);
+                if (GScoreCandidate < gScore.GetValueOrReturnDefault(node, float.PositiveInfinity))
+                {
+                    cameFrom[node] = cur;
+                    gScore[node] = GScoreCandidate;
+                    fScore[node] = GScoreCandidate + GetHeuristic(node);
+                    if (!openSet.Contains(node))
+                    {
+                        openSet.Add(node);
+                    }
+                }
+            }
         }
+        // Nothing is found, return empty list
         return new List<Vector3>();
 
     }
