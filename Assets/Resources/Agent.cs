@@ -149,7 +149,7 @@ public class Agent : MonoBehaviour
         }       
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerStay2D(Collider2D other)
     {
         if (other.tag == "DoNotCollideWithAgent" || status != 0)
         {
@@ -169,13 +169,13 @@ public class Agent : MonoBehaviour
         Invoke(nameof(RetryDestination), Random.Range(0.1f, 0.5f));
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "DoNotCollideWithAgent") return;
         collisions++;
         Debug.Log("OnTriggerEnter");
     }
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (other.tag == "DoNotCollideWithAgent") return;
         collisions--;
