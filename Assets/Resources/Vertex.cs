@@ -10,7 +10,8 @@ public class Vertex
 
     public bool isInflection = false;
 
-    public List<Vertex> neighbors = new List<Vertex>();
+    public GraphNode curdownstream;
+    public List<(Vertex vertex, float cost)> neighbors = new List<(Vertex, float)>();
 
     public Vector3 getValue(float z)
     {

@@ -4,11 +4,26 @@ using UnityEngine;
 
 public class Global
 {
-    // Start is called before the first frame update
+
     public static readonly float obstacleZ = -2;
     public static readonly float graphZ = -3;
+    public static readonly float agentZ = -4;
 
-    public static Vector3 RandomPosition()
+    // generate a random position on the floor that is not overlapping with agents and obstacle
+
+    private static bool CubeCast(Vector3 orig, float l)
+    {
+        Vector3 pos = new Vector3(orig.x + l / 2, orig.y + l / 2, orig.z);
+        if (!Physics.Raycast(pos, Vector3.back, 2)) return false;
+        pos.x -= l;
+        if (!Physics.Raycast(pos, Vector3.back, 2)) return false;
+        pos.x += l;
+        pos.y -= l;
+        if (!Physics.Raycast(pos, Vector3.back, 2)) return false;
+        return true;
+    }
+
+    public static Vector3 RandomPosition(Vector3 halfExtents)
     {
         float x_min = -9;
         float x_max = 9;
@@ -18,10 +33,10 @@ public class Global
         while (true)
         {
             var pos = new Vector3(Random.Range(x_min, x_max), Random.Range(y_min, y_max), 1);
-            bool inArena = Physics.Raycast(pos, Vector3.back, 10);
-            bool isOverlap = Physics.Raycast(pos, Vector3.back, 10);
-            if (!inArena || isOverlap) continue;
+            bool inArena = CubeCast(pos, halfExtents.x * 2);
             pos.z = 0;
+            bool isOverlap = Physics.BoxCast(pos, halfExtents, Vector3.back);
+            if (!inArena || isOverlap) continue;
             return pos;
         }
     }
