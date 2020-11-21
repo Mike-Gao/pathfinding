@@ -132,7 +132,8 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        switch(status){
+        switch(status)
+        {
             case 0:
                 if(!Collided)
                 {
@@ -145,7 +146,6 @@ public class Agent : MonoBehaviour
                 break;
             default:
                 break;
-        }
-        
+        }       
     }
 }

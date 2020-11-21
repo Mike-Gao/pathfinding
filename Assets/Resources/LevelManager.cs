@@ -32,8 +32,8 @@ public class LevelManager : MonoBehaviour
         ObstacleSpawner();
         // Adding a bit of delay to allow object to spawn properly
         Invoke("ShowReducedVisabilityGraph", 0.5f);
-        
-        AgentSpawner();
+        // Invoke AgentSpawner after building Reduced Visability Graph
+        Invoke("AgentSpawner", 0.5f);
         // Debug
         // foreach( var list in shapes ){
         //     for(int i = 0; i < list.Length; i++){
