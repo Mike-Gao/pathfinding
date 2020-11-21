@@ -22,13 +22,18 @@ public class LevelManager : MonoBehaviour
 
     public Obstacle Obstacle;
 
+    public Agent agent;
+    public List<Agent> agents = new List<Agent>();
+    public int agentLimit;
+
     void Start()
     {
         StagePrep();
         ObstacleSpawner();
         // Adding a bit of delay to allow object to spawn properly
         Invoke("ShowReducedVisabilityGraph", 0.5f);
-
+        
+        AgentSpawner();
         // Debug
         // foreach( var list in shapes ){
         //     for(int i = 0; i < list.Length; i++){
@@ -45,10 +50,15 @@ public class LevelManager : MonoBehaviour
         // }
     }
 
-    // Update is called once per frame
-    void Update()
+
+    void AgentSpawner()
     {
-        
+        while(agents.Count < agentLimit)
+        {
+            var pos = Global.RandomPosition(Agent.halfExtents);
+            pos.z = Global.agentZ;
+            agents.Add(Instantiate(agent, pos, Quaternion.identity));
+        }
     }
 
     bool Overlap(Vector2 new_p, List<Vector2> pos, float l)

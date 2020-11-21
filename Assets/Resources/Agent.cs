@@ -70,8 +70,8 @@ public class Agent : MonoBehaviour
             Move();
             return;
         }
-        var graph = new Graph(graph, transform.position, destination.transform.position);
-        path = Graph.AStarSearch();
+        var gr = new Graph(graph, transform.position, destination.transform.position);
+        path = gr.AStarSearch();
         if (path.Count == 0)
         {
             Debug.Log("Failed to find a path");
