@@ -2,7 +2,7 @@
 
 #### Assignment 3 @ COMP-521
 
-![image-20201122131929693](/home/gao/Desktop/pathfinding/screenshot.png)
+![screenshot](screenshot.png)
 
 The results below are obtained from simulating for 60 seconds.
 
