@@ -61,5 +61,5 @@ The results below are obtained from simulating for 60 seconds.
 | 3    | 373        | 2684         | 2285            | 291.9881        |
 | Avg  | 368        | 2658         | 2263            | 320.8149        |
 
-Behavior is starting to become unacceptable after 32 Agents, although the frame rate is still high. Sometimes, more agents will have paths colliding with each other, and this issue is pronounced when you have a cluster of agents colliding in the same region. In such cases, since agents are both colliders, they kept pushing back and bumping into each other.
+Starting from 16 agent we see a slight decline in the average successful path planned. Behavior is starting to become unacceptable after 32 Agents, although the frame rate is still high. Sometimes, more agents will have paths colliding with each other, and this issue is pronounced when you have a cluster of agents colliding in the same region. In such cases, agents kept pushing back and bumping into each other which staled the whole movement.
 
