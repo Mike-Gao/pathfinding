@@ -9,8 +9,20 @@ public static class Global
     public static readonly float graphZ = -3;
     public static readonly float agentZ = -4;
 
-    // generate a random position on the floor that is not overlapping with agents and obstacle
+    public static int pathPlanned = 0;
+    public static int pathReplanned = 0;
+    public static int success = 0;
+    public static System.TimeSpan total = System.TimeSpan.Zero;
 
+    public static void ShowStats()
+    {
+        Debug.Log($"Path Planned: {pathPlanned}");
+        Debug.Log($"Path Replanned: {pathReplanned}");
+        Debug.Log($"Successful: {success}");
+        Debug.Log($"Time Elapsed: {total.TotalMilliseconds} (ms)");
+    }
+    
+    // Raycast 4 lines for every corner
     private static bool CubeCast(Vector3 orig, float l)
     {
         Vector3 pos = new Vector3(orig.x + l / 2, orig.y + l / 2, orig.z);
@@ -23,6 +35,7 @@ public static class Global
         return true;
     }
 
+    // Generate a random position that is not overlapping with any agent or obstacles
     public static Vector3 RandomPosition(Vector3 halfExtents)
     {
         float x_min = -9;

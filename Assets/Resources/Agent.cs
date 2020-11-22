@@ -149,37 +149,35 @@ public class Agent : MonoBehaviour
         }       
     }
 
+    // If they collided, wait between 100ms and 500ms and replan
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.tag == "DoNotCollideWithAgent" || status != 0)
+        
+        if (status != 0)
         {
             return;
         }
 
         status = 2;
-
-        Debug.Log("OnTriggerStay");
-        // push back both collider aka wacky verlet constraint
+        //Debug.Log("OnTriggerStay");
+        // Push back both collider
         var thisToThat = other.transform.position - transform.position;
         var offset = radius * 2 - thisToThat.magnitude;
         thisToThat.Normalize();
         transform.position -= 0.6f * offset * thisToThat;
         other.transform.position += 0.6f * offset * thisToThat;
-
-        Invoke(nameof(RetryDestination), Random.Range(0.1f, 0.5f));
+        Invoke("RetryDestination", Random.Range(0.1f, 0.5f));
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "DoNotCollideWithAgent") return;
         collisions++;
-        Debug.Log("OnTriggerEnter");
+        //Debug.Log("OnTriggerEnter");
     }
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.tag == "DoNotCollideWithAgent") return;
         collisions--;
-        Debug.Log("OnTriggerExit");
+        //Debug.Log("OnTriggerExit");
     }
 
 }
