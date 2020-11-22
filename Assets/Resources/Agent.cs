@@ -26,7 +26,6 @@ public class Agent : MonoBehaviour
     private bool Retry {
         get {
             if (failures >= 3){
-                failures = 0;
                 return false;
             }
             return true;
@@ -109,7 +108,6 @@ public class Agent : MonoBehaviour
     // Retry after collision
     void RetryDestination()
     {
-        Debug.Log(failures);
         if (Retry)
         {
             failures++;
@@ -118,7 +116,8 @@ public class Agent : MonoBehaviour
         } 
         else
         {
-            Debug.Log("RANDOM DESTINATION RETRY!!!");
+            failures = 0;
+            //Debug.Log("RANDOM DESTINATION RETRY!!!");
             GoToRandomDestination();
         }
     }
@@ -145,6 +144,7 @@ public class Agent : MonoBehaviour
         var offset = radius * 2 - delta.magnitude;
         delta.Normalize();
         transform.position -= 0.6f * offset * delta;
+        other.transform.position += 2.0f * offset * delta;
         Invoke("RetryDestination", Random.Range(0.1f, 0.5f));
     }
 
