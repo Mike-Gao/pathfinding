@@ -22,7 +22,17 @@ public class Agent : MonoBehaviour
 
     private int failures = 0;
     private int collisions = 0;
-    bool Collided {
+
+    private bool Retry {
+        get {
+            if (failures >= 3){
+                failures = 0;
+                return false;
+            }
+            return true;
+        }
+    }
+    private bool Collided {
         get{
             return collisions > 0;
         }
@@ -49,7 +59,7 @@ public class Agent : MonoBehaviour
 
     void GoToDestination()
     {
-        path = Graph.ComputePath(graph, transform.position, destination.transform.position);
+        path = Graph.ComputePath(graph, this.transform.position, this.destination.transform.position);
         if (path.Count == 0)
         {
             Debug.Log("Failed to find a path");
@@ -79,8 +89,8 @@ public class Agent : MonoBehaviour
 
         float maxdistanceDelta = velocity * Time.deltaTime;
         Vector3 target = path[path.Count - 1];
-        this.transform.position = Vector3.MoveTowards(transform.position, target, maxdistanceDelta);
-        if (Vector3.Distance(this.transform.position, target) < 0.001f)
+        transform.position = Vector3.MoveTowards(transform.position, target, maxdistanceDelta);
+        if (Vector3.Distance(transform.position, target) < 0.001f)
         {
             path.RemoveAt(path.Count - 1);
         }
@@ -90,7 +100,7 @@ public class Agent : MonoBehaviour
     {
         if (path.Count != 0)
         {
-            float maxdistanceDelta = -0.75f * velocity * Time.deltaTime;
+            float maxdistanceDelta = -0.5f * velocity * Time.deltaTime;
             var target = path[path.Count - 1];
             this.transform.position = Vector3.MoveTowards(transform.position, target, maxdistanceDelta);
         }
@@ -99,17 +109,15 @@ public class Agent : MonoBehaviour
     // Retry after collision
     void RetryDestination()
     {
-        Global.pathReplanned += 1;
-        if (failures >= 3)
+        
+        if (Retry)
         {
-            failures = 0;
-            Debug.Log("Select a new destination");
-            GoToRandomDestination();
+            Global.pathReplanned += 1;
+            GoToDestination();
         } 
         else
         {
-            failures++;
-            GoToDestination();
+            GoToRandomDestination();
         }
     }
     
@@ -129,13 +137,13 @@ public class Agent : MonoBehaviour
             return;
         }
         status = 2;
-        Debug.Log("OnTriggerStay");
+        //Debug.Log("OnTriggerStay");
         // Push back both collider
         var thisToThat = other.transform.position - transform.position;
         var offset = radius * 2 - thisToThat.magnitude;
         thisToThat.Normalize();
-        transform.position -= 0.5f * offset * thisToThat;
-        other.transform.position += 0.5f * offset * thisToThat;
+        transform.position -= 2.0f * offset * thisToThat;
+        other.transform.position += 2.0f * offset * thisToThat;
         Invoke("RetryDestination", Random.Range(0.1f, 0.5f));
     }
 
@@ -143,12 +151,12 @@ public class Agent : MonoBehaviour
     {
         collisions++;
         BackTrack();
-        Debug.Log("OnTriggerEnter");
+        //Debug.Log("OnTriggerEnter");
     }
     private void OnTriggerExit2D(Collider2D other)
     {
         collisions--;
-        Debug.Log("OnTriggerExit");
+        //Debug.Log("OnTriggerExit");
     }
 
 }

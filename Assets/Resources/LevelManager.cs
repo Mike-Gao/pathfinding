@@ -54,9 +54,9 @@ public class LevelManager : MonoBehaviour
 
     public void ShowStats()
     {
+        Debug.Log($"Successful: {Global.success}");
         Debug.Log($"Path Planned: {Global.pathPlanned}");
         Debug.Log($"Path Replanned: {Global.pathReplanned}");
-        Debug.Log($"Successful: {Global.success}");
         Debug.Log($"Time Elapsed: {Global.total.TotalMilliseconds} (ms)");
     }
     void AgentSpawner()
