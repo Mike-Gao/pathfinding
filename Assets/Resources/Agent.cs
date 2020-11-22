@@ -143,13 +143,15 @@ public class Agent : MonoBehaviour
         var delta = other.transform.position - transform.position;
         var offset = radius * 2 - delta.magnitude;
         delta.Normalize();
-        transform.position -= 2.0f * offset * delta;
-        other.transform.position += 2.0f * offset * delta;
+        transform.position -= 0.6f * offset * delta;
         Invoke("RetryDestination", Random.Range(0.1f, 0.5f));
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (status == 2){
+            return;
+        }
         collisions++;
         BackTrack();
         //Debug.Log("OnTriggerEnter");
