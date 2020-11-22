@@ -109,14 +109,16 @@ public class Agent : MonoBehaviour
     // Retry after collision
     void RetryDestination()
     {
-        
+        Debug.Log(failures);
         if (Retry)
         {
+            failures++;
             Global.pathReplanned += 1;
             GoToDestination();
         } 
         else
         {
+            Debug.Log("RANDOM DESTINATION RETRY!!!");
             GoToRandomDestination();
         }
     }
@@ -137,13 +139,12 @@ public class Agent : MonoBehaviour
             return;
         }
         status = 2;
-        //Debug.Log("OnTriggerStay");
+        // Debug.Log("OnTriggerStay");
         // Push back both collider
-        var thisToThat = other.transform.position - transform.position;
-        var offset = radius * 2 - thisToThat.magnitude;
-        thisToThat.Normalize();
-        transform.position -= 2.0f * offset * thisToThat;
-        other.transform.position += 2.0f * offset * thisToThat;
+        var delta = other.transform.position - transform.position;
+        var offset = radius * 2 - delta.magnitude;
+        delta.Normalize();
+        transform.position -= 0.6f * offset * delta;
         Invoke("RetryDestination", Random.Range(0.1f, 0.5f));
     }
 

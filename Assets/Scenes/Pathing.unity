@@ -6675,7 +6675,7 @@ MonoBehaviour:
     type: 3}
   agent: {fileID: 7433741213553712787, guid: 83dff0408ea96adeab7c2b1706b56c8f, type: 3}
   agents: []
-  agentLimit: 64
+  agentLimit: 16
 --- !u!1 &1916036163
 GameObject:
   m_ObjectHideFlags: 0
