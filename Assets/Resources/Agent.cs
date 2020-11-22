@@ -143,7 +143,7 @@ public class Agent : MonoBehaviour
         var delta = other.transform.position - transform.position;
         var offset = radius * 2 - delta.magnitude;
         delta.Normalize();
-        transform.position -= 0.6f * offset * delta;
+        transform.position -= 0.75f * offset * delta;
         Invoke("RetryDestination", Random.Range(0.1f, 0.5f));
     }
 
