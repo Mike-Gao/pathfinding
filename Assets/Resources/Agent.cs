@@ -6,7 +6,6 @@ using UnityEngine;
 public class Agent : MonoBehaviour
 {
     public static ReducedVisibility graph;
-    public static int spawned = 0;
 
     public static readonly Vector3 halfExtents = new Vector3(radius, radius, 1);
     public static readonly float radius = 0.1f;
@@ -23,16 +22,6 @@ public class Agent : MonoBehaviour
 
     private int failures = 0;
     private int collisions = 0;
-    bool Retry {
-        get{
-            if (failures >=3) {
-                failures = 0;
-                return false;
-            }
-            failures++;
-            return true;
-        }
-    }
     bool Collided {
         get{
             return collisions > 0;
@@ -49,7 +38,6 @@ public class Agent : MonoBehaviour
         var color = Random.ColorHSV();
         color.a = 1;
         Renderer.color = color;
-        spawned++;
         var pos = Global.RandomPosition(halfExtents);
         pos.z = Global.agentZ;
 
@@ -61,17 +49,7 @@ public class Agent : MonoBehaviour
 
     void GoToDestination()
     {
-        var dir = destination.transform.position - this.transform.position;
-        var pos = new Vector3(transform.position.x, transform.position.y, Global.obstacleZ);
-        if (!Physics.BoxCast(pos, halfExtents, dir, Quaternion.identity))
-        {
-            status = 0;
-            path = new List<Vector3>(){ destination.transform.position};
-            Move();
-            return;
-        }
-        var gr = new Graph(graph, transform.position, destination.transform.position);
-        path = gr.AStarSearch();
+        path = Graph.ComputePath(graph, transform.position, destination.transform.position);
         if (path.Count == 0)
         {
             Debug.Log("Failed to find a path");
@@ -92,7 +70,10 @@ public class Agent : MonoBehaviour
     {
         if(path.Count == 0)
         {
-            status = 1;
+            Global.success++;
+            status = 2;
+            // 200ms - 1000ms, choose new destination
+            Invoke("GoToRandomDestination", Random.Range(0.2f, 1f));
             return;
         }
 
@@ -109,75 +90,65 @@ public class Agent : MonoBehaviour
     {
         if (path.Count != 0)
         {
-            float maxdistanceDelta = Random.Range(1, 2) * velocity * Time.deltaTime;
+            float maxdistanceDelta = -0.75f * velocity * Time.deltaTime;
             var target = path[path.Count - 1];
-            this.transform.position = Vector3.MoveTowards(transform.position, -target, maxdistanceDelta);
+            this.transform.position = Vector3.MoveTowards(transform.position, target, maxdistanceDelta);
         }
     }
 
+    // Retry after collision
     void RetryDestination()
     {
-        if (Retry)
+        Global.pathReplanned += 1;
+        if (failures >= 3)
         {
-            BackTrack();
-            GoToDestination();
+            failures = 0;
+            Debug.Log("Select a new destination");
+            GoToRandomDestination();
         } 
         else
         {
-            // trigger a new destination
-            status = 1;
+            failures++;
+            GoToDestination();
         }
     }
     
     // Update is called once per frame
     void FixedUpdate()
     {
-        switch(status)
-        {
-            case 0:
-                if(!Collided)
-                {
-                    Move();
-                }
-                break;
-            case 1:
-                Invoke("GoToRandomDestination", Random.Range(0.2f, 1));
-                status = 2;
-                break;
-            default:
-                break;
-        }       
+        if (status == 0 && !Collided) {
+            Move();
+        } 
     }
 
     // If they collided, wait between 100ms and 500ms and replan
     private void OnTriggerStay2D(Collider2D other)
     {
-        
-        if (status != 0)
+        if (status == 2)
         {
             return;
         }
-
         status = 2;
-        //Debug.Log("OnTriggerStay");
+        Debug.Log("OnTriggerStay");
         // Push back both collider
         var thisToThat = other.transform.position - transform.position;
         var offset = radius * 2 - thisToThat.magnitude;
         thisToThat.Normalize();
-        transform.position -= 0.6f * offset * thisToThat;
-        other.transform.position += 0.6f * offset * thisToThat;
+        transform.position -= 0.5f * offset * thisToThat;
+        other.transform.position += 0.5f * offset * thisToThat;
         Invoke("RetryDestination", Random.Range(0.1f, 0.5f));
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         collisions++;
-        //Debug.Log("OnTriggerEnter");
+        BackTrack();
+        Debug.Log("OnTriggerEnter");
     }
     private void OnTriggerExit2D(Collider2D other)
     {
         collisions--;
-        //Debug.Log("OnTriggerExit");
+        Debug.Log("OnTriggerExit");
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class Graph
@@ -77,6 +78,31 @@ public class Graph
         return lowest;
     }
 
+    // Return path
+    public static List<Vector3> ComputePath(ReducedVisibility singleton, Vector2 start, Vector2 end)
+    {
+        Global.pathPlanned++;
+        Stopwatch sw = Stopwatch.StartNew();
+        Vector2 dir = end - start;
+        Vector3 pos = new Vector3(start.x, start.y, Global.obstacleZ);
+        List<Vector3> path;
+        // if you can reach it directly
+        if (!Physics.BoxCast(pos, Agent.halfExtents, dir, Quaternion.identity, dir.magnitude))
+        {
+            Vector3 vDest = new Vector3(end.x, end.y, Global.agentZ);
+            pos.z = Global.agentZ;
+            path = new List<Vector3>() {
+                vDest, pos
+            };
+        } else
+        {
+            var g = new Graph(singleton, start, end);
+            path = g.AStarSearch();
+        }
+        sw.Stop();
+        Global.total += sw.Elapsed;
+        return path;
+    }
     public List<Vector3> ReconstructPath(Dictionary<GraphNode, GraphNode> cameFrom, GraphNode cur)
     {
         List<Vector3> tmp = new List<Vector3>();

@@ -24,7 +24,7 @@ public class LevelManager : MonoBehaviour
 
     public Agent agent;
     public List<Agent> agents = new List<Agent>();
-    public int agentLimit = 500;
+    public int agentLimit;
 
     void Start()
     {
@@ -48,9 +48,17 @@ public class LevelManager : MonoBehaviour
         //         lr.endWidth = 0.05f;
         //     }
         // }
+        Invoke(nameof(ShowStats), 60);
     }
 
 
+    public void ShowStats()
+    {
+        Debug.Log($"Path Planned: {Global.pathPlanned}");
+        Debug.Log($"Path Replanned: {Global.pathReplanned}");
+        Debug.Log($"Successful: {Global.success}");
+        Debug.Log($"Time Elapsed: {Global.total.TotalMilliseconds} (ms)");
+    }
     void AgentSpawner()
     {
         while(agents.Count < agentLimit)

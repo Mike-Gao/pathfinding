@@ -14,13 +14,7 @@ public static class Global
     public static int success = 0;
     public static System.TimeSpan total = System.TimeSpan.Zero;
 
-    public static void ShowStats()
-    {
-        Debug.Log($"Path Planned: {pathPlanned}");
-        Debug.Log($"Path Replanned: {pathReplanned}");
-        Debug.Log($"Successful: {success}");
-        Debug.Log($"Time Elapsed: {total.TotalMilliseconds} (ms)");
-    }
+    
     
     // Raycast 4 lines for every corner
     private static bool CubeCast(Vector3 orig, float l)
